@@ -76,27 +76,4 @@ Steps:
 3) Verify
    - `curl http://localhost:8080/health`
 
-## CI and security checks
 
-### CI workflow (`ci.yml`)
-Runs:
-- pytest unit tests
-- dependency audit with `pip-audit` (non-blocking in this template)
-- Docker build
-- Trivy container scan (SARIF output uploaded as artifact)
-
-### CodeQL workflow (`codeql.yml`)
-Runs GitHub’s CodeQL analysis for Python. Results appear under:
-Repo → Security → Code scanning alerts (timing depends on GitHub).
-
-### SBOM workflow (`sbom.yml`)
-Builds the container and generates an SPDX JSON SBOM using Syft. The SBOM is uploaded as an artifact.
-
-## Viewing outputs
-- Actions → latest run → Artifacts:
-  - `ci-artifacts` contains `trivy-results.sarif`
-  - `sbom` contains `sbom.spdx.json`
-
-## Notes
-- This repo is intentionally small so the pipeline is easy to understand and extend.
-- Replace the Flask app with any internal service and keep the same security gates and artifact publishing pattern.
