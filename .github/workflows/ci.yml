@@ -1,0 +1,47 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test_and_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pip-audit
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Dependency audit (pip-audit)
+        run: pip-audit -r requirements.txt || true
+
+      - name: Build Docker image
+        run: docker build -t devsecops-ci-pipeline:local .
+
+      - name: Container scan (Trivy SARIF)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: devsecops-ci-pipeline:local
+          format: sarif
+          output: trivy-results.sarif
+        continue-on-error: true
+
+      - name: Upload scan artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-artifacts
+          path: trivy-results.sarif
