@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>DevSecOps CI/CD Dashboard</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Arial, sans-serif; margin: 40px; line-height: 1.5; }
+    .card { border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; margin: 14px 0; }
+    .title { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+    .sub { color: #6b7280; margin-bottom: 18px; }
+    code { background: #f3f4f6; padding: 2px 6px; border-radius: 6px; }
+    a { text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .pill { display:inline-block; padding: 4px 10px; border-radius: 999px; background:#f3f4f6; margin-right: 8px; font-size: 12px; }
+    ul { margin: 10px 0 0 18px; }
+  </style>
+</head>
+<body>
+  <div class="title">DevSecOps CI/CD Dashboard</div>
+  <div class="sub">A lightweight overview of what this repo’s pipeline runs and where to view outputs.</div>
+
+  <div class="card">
+    <div><span class="pill">CI</span><span class="pill">Tests</span><span class="pill">Docker</span></div>
+    <p>On every push/PR, the pipeline runs <code>pytest</code>, builds a Docker image, and uploads artifacts.</p>
+    <ul>
+      <li>GitHub Actions runs: <a href="https://github.com/jigark712/devsecops-ci-pipeline/actions">Actions</a></li>
+      <li>Artifacts: open the latest run → Artifacts → download <code>ci-artifacts</code></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div><span class="pill">Security</span><span class="pill">CodeQL</span></div>
+    <p>Static analysis using GitHub CodeQL. Results appear under code scanning alerts.</p>
+    <ul>
+      <li>Code scanning: <a href="https://github.com/jigark712/devsecops-ci-pipeline/security/code-scanning">Security → Code scanning</a></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div><span class="pill">Supply Chain</span><span class="pill">SBOM</span></div>
+    <p>Generates an SPDX JSON SBOM (Syft) and uploads it as an artifact.</p>
+    <ul>
+      <li>Artifacts: open the latest run → download <code>sbom</code> → <code>sbom.spdx.json</code></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div><span class="pill">Quick Demo</span></div>
+    <p>Local run:</p>
+    <ul>
+      <li><code>docker build -t devsecops-ci-pipeline:local .</code></li>
+      <li><code>docker run --rm -p 8080:8080 devsecops-ci-pipeline:local</code></li>
+      <li><code>curl http://localhost:8080/health</code></li>
+    </ul>
+  </div>
+</body>
+</html>
